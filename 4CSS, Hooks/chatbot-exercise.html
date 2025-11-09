@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chatbot</title>
+	<style>
+		body {
+			margin-top: 0px;
+			margin-bottom: 0px;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+
+		#js-container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+
+		.send-button {
+			background-color: rgb(25, 135, 84);
+			color: whitesmoke;
+			padding: 12px 20px;
+			border: none;
+			border-radius: 8px;
+			margin: 10px;
+			font-size: 15px;
+			cursor: pointer;
+		}
+
+		.prompt-field {
+			padding: 12px 8px;
+			border-radius: 12px;
+			border: solid 1px black;
+		}
+
+		.chatbot-container {
+			max-width: 600px;
+			margin-left: auto;
+			margin-right: auto;
+
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.input-container {
+			margin-top: auto;
+		}
+
+		.message-container {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.Chat {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 24px;
+		}
+
+		.robot {
+			align-self: self-start;
+		}
+
+		.user {
+			align-self: flex-end;
+		}
+
+		.message-blob {
+			background-color: rgb(25, 135, 84);
+			border-radius: 8px;
+			padding: 12px;
+			color: whitesmoke;
+			font-weight: 400;
+			max-width: 200px;
+		}
+
+		.welcome-text {
+			color: gray;
+			margin-top: auto;
+			margin-bottom: 0px;
+		}
+
+		.spinner {
+			margin: -15px;
+			height: 40px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="js-container"></div>
+	<script src="https://unpkg.com/supersimpledev/react.js"></script>
+	<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+	<script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+	<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+	<script type="text/babel">
+		function useAutoScroll(dependencies) {
+			const theRef = React.useRef(null);
+			React.useEffect(() => {
+				// current sepertinya komponent ref yang terakhir kali di update deh
+				const containerElem = theRef.current;
+				if (containerElem) {
+					window.scrollTo(0, containerElem.scrollHeight);
+				}
+			}, dependencies);
+			return theRef;
+		}
+		function ChatInput({ chatMessages, setChatMessages, isLoading, setIsLoading }) {
+			const [textInput, setTextInput] = React.useState("");
+			function changeText(event) {
+				setTextInput(event.target.value);
+			};
+			async function sendMessage() {
+				// panggil setter dari state, 
+				// di react kita tidak bisa mengubah data secara langsung, tapi kita membuat copyan dari datanya dan kemudian mengganti data nya dengan data baru
+				// setChatMessages([
+				// 	...chatMessages, // ini mengambil values dari array, kemudian copy datanya menjadi data baru
+				// 	// kemudian setelah koma ini adalah value yang akan di tambahkan ke copyan array nya
+				// 	{
+				// 		message: textInput ,
+				// 		sender: "user",
+				// 		id: crypto.randomUUID()
+				// 	}
+				// ]);
+
+				// State tidak akan langsung ke update ketika kita update statenya, melainkan dia tunggu hingga semua code selesai dijalankan, jadi ketika kita buat immidiate update state seperti di atas, maka jika kita immidiate update jg di bawah. maka yang di atas tdk akan di gunakan.
+				// Oleh karena itulah kita tampung di variabel dlu
+				const newSetOfMessages = [
+					...chatMessages,
+					{
+						message: textInput,
+						sender: "user",
+						id: crypto.randomUUID()
+					}
+				];
+				// Update state nya dengan variabel baru
+				setChatMessages(newSetOfMessages);
+				setTextInput("");
+				setIsLoading(true);
+				const response = await Chatbot.getResponseAsync(textInput);
+				setIsLoading(false);
+
+				setChatMessages([
+					...newSetOfMessages, // buat copyan dari array variabel baru
+					{
+						message: response,
+						sender: "robot",
+						id: crypto.randomUUID()
+					}
+				]);
+
+			};
+
+			function keyHandler(event) {
+				if (event.key === "Enter") {
+					sendMessage();
+				} else if (event.key === "Escape") {
+					setTextInput("");
+				}
+			};
+
+			return (
+				<div className="input-container">
+					<input
+						className="prompt-field"
+						placeholder="Send a message to chatbot!"
+						size="50"
+						onChange={changeText}
+						value={textInput}
+						onKeyDown={keyHandler}
+						disabled={isLoading}
+
+					/>
+					<button onClick={sendMessage} className="send-button">Send</button>
+				</div>
+			);
+		}
+
+		function ChatMessage({ message, sender }) {
+			return (
+				// Dengan menggunakan div, jadinya seperti buat line baru
+				<div className={sender === "robot" ? "robot Chat" : "user Chat"}>
+					{sender === 'robot' && (
+						<img src='robot.png' width='50' />
+					)}
+
+					<span className="message-blob">{message}</span>
+
+					{sender === 'user' && (
+						<img src="user.png" width="50" />
+					)}
+				</div>
+			)
+		}
+		function ChatMessages({ chatMessages }) {
+			//useRef adalah sebuah function untuk mengambil html elemen dengan mengggunakan ref, dan menyimpannya dalam variabel atau di dalam useRef ini
+			const chatMessageRef = useAutoScroll([chatMessages]);
+			// use effect adalah sebuah function yang akan menjalankan callback function setiap kali komponen di buat atau di update
+			// React.useEffect(() => {
+			// 	// current sepertinya komponent ref yang terakhir kali di update deh
+			// 	const containerElem = chatMessageRef.current;
+			// 	if (containerElem) {
+			// 		window.scrollTo(0, containerElem.scrollHeight);
+			// 	}
+			// }, [chatMessages]);
+			// Parameter ke-2 adalah menentukan kapan useEffect akan berjalan secara default yakni array kosong [], maka tiap komponen di update atau di ubah maka useeffect akan jalan
+			return (
+				// Gunakan fragment karena .map akan generate banyak line
+				// onClick = Event(always camelCase) ------ sendMessage = EventHandler
+				<div className="message-container" ref={chatMessageRef}>
+					{chatMessages.map((chatMessage) => {
+						return (
+							<ChatMessage
+								message={chatMessage.message}
+								sender={chatMessage.sender}
+								key={chatMessage.id}
+							/>
+						);
+					})}
+				</div>
+			);
+		}
+
+		function App() {
+			// State menghubungkan data dengan html, jadi ketika datanya berubah, maka dia akan generate html kembali. jadi dia bakal
+			// useState akan return array, array[0] adalah data nya, array[1] adalah setter nya
+			// [chatMessages, setChatMessages] --> ini adalah array destructuring, jadi dia akan menampung return value dari React.useState, chatMessages = [0] --- setChatMessage = [1]
+			const [chatMessages, setChatMessages] = React.useState([]);
+			const [isLoading, setIsLoading] = React.useState(false);
+			return (
+				<div className="chatbot-container">
+					<ChatMessages
+						chatMessages={chatMessages}
+					/>
+					{isLoading &&
+						<ChatMessage
+							message={<img className="spinner" src="loading-spinner.gif"></img>}
+							sender="robot"
+							id="loading"
+						/>
+					}
+					{
+						chatMessages.length === 0 && <span className="welcome-text">Welcome to chatbot project! Send a message using textbox below!</span>
+					}
+					<ChatInput
+						chatMessages={chatMessages}
+						setChatMessages={setChatMessages}
+						isLoading={isLoading}
+						setIsLoading={setIsLoading}
+					/>
+				</div>
+			)
+		}
+		const container = document.getElementById("js-container");
+		ReactDOM.createRoot(container).render(<App />);
+	</script>
+</body>
+
+</html>

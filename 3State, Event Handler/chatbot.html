@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chatbot</title>
+</head>
+
+<body>
+	<div id="js-container"></div>
+	<script src="https://unpkg.com/supersimpledev/react.js"></script>
+	<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+	<script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+	<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+	<script type="text/babel">
+		function ChatInput({ chatMessages, setChatMessages, isLoading, setIsLoading }) {
+			const [textInput, setTextInput] = React.useState("");
+			function changeText(event) {
+				setTextInput(event.target.value);
+				console.log(textInput);
+			};
+
+			async function sendMessage() {
+				// panggil setter dari state, 
+				// di react kita tidak bisa mengubah data secara langsung, tapi kita membuat copyan dari datanya dan kemudian mengganti data nya dengan data baru
+				// setChatMessages([
+				// 	...chatMessages, // ini mengambil values dari array, kemudian copy datanya menjadi data baru
+				// 	// kemudian setelah koma ini adalah value yang akan di tambahkan ke copyan array nya
+				// 	{
+				// 		message: textInput ,
+				// 		sender: "user",
+				// 		id: crypto.randomUUID()
+				// 	}
+				// ]);
+
+				// State tidak akan langsung ke update ketika kita update statenya, melainkan dia tunggu hingga semua code selesai dijalankan, jadi ketika kita buat immidiate update state seperti di atas, maka jika kita immidiate update jg di bawah. maka yang di atas tdk akan di gunakan.
+				// Oleh karena itulah kita tampung di variabel dlu
+				const newSetOfMessages = [
+					...chatMessages,
+					{
+						message: textInput,
+						sender: "user",
+						id: crypto.randomUUID()
+					}
+				];
+				// Update state nya dengan variabel baru
+				setChatMessages(newSetOfMessages);
+				setTextInput("");
+				setIsLoading(true);
+				const response = await Chatbot.getResponseAsync(textInput);
+				setIsLoading(false);
+				console.log(response);
+
+
+				setChatMessages([
+					...newSetOfMessages, // buat copyan dari array variabel baru
+					{
+						message: response,
+						sender: "robot",
+						id: crypto.randomUUID
+					}
+				]);
+
+			};
+
+			function keyHandler(event) {
+				if(event.key === "Enter") {
+					sendMessage();
+				} else if(event.key === "Escape") {
+					setTextInput("");
+				}
+			};
+
+			return (
+				<>
+					<input
+						placeholder="Send a message to chatbot!"
+						size="30"
+						onChange={changeText}
+						value={textInput}
+						onKeyDown={keyHandler}
+						disabled={isLoading}
+					/>
+					<button onClick={sendMessage}>Send</button>
+				</>
+			);
+		}
+
+		function ChatMessage({ message, sender }) {
+			return (
+				// Dengan menggunakan div, jadinya seperti buat line baru
+				<div>
+					{sender === 'robot' && (
+						<img src='robot.png' width='50' />
+					)}
+
+					{message}
+
+					{sender === 'user' && (
+						<img src="user.png" width="50" />
+					)}
+				</div>
+			)
+		}
+		function ChatMessages({ chatMessages }) {
+			return (
+				// Gunakan fragment karena .map akan generate banyak line
+				// onClick = Event(always camelCase) ------ sendMessage = EventHandler
+				<>
+					{chatMessages.map((chatMessage) => {
+						return (
+							<ChatMessage
+								message={chatMessage.message}
+								sender={chatMessage.sender}
+								key={chatMessage.id}
+							/>
+						);
+					})}
+				</>
+			);
+		}
+
+		function App() {
+			// State menghubungkan data dengan html, jadi ketika datanya berubah, maka dia akan generate html kembali. jadi dia bakal
+			// useState akan return array, array[0] adalah data nya, array[1] adalah setter nya
+			// [chatMessages, setChatMessages] --> ini adalah array destructuring, jadi dia akan menampung return value dari React.useState, chatMessages = [0] --- setChatMessage = [1]
+			const [chatMessages, setChatMessages] = React.useState(
+				[
+					{
+						message: "Halo Guys",
+						sender: "user",
+						id: "id1"
+					},
+					{
+						message: "Hello! How can i help you?",
+						sender: "robot",
+						id: "id2"
+					},
+					{
+						message: "Can you get me todays date?",
+						sender: "user",
+						id: "id3"
+					},
+					{
+						message: "Today is September 27",
+						sender: "robot",
+						id: "id4"
+					},
+				]
+			)
+			const [isLoading, setIsLoading] = React.useState(false);
+			return (
+				<>
+					<ChatInput
+						chatMessages={chatMessages}
+						setChatMessages={setChatMessages}
+						isLoading = {isLoading}
+						setIsLoading = {setIsLoading}
+					/>
+					<ChatMessages
+						chatMessages={chatMessages}
+					/>
+					{isLoading && 
+						<ChatMessage
+							message = "Loading..."
+							sender  = "robot"
+							id = {crypto.randomUUID}
+						/>
+					}
+				</>
+			)
+		}
+		const container = document.getElementById("js-container");
+		ReactDOM.createRoot(container).render(<App />);
+	</script>
+</body>
+
+</html>

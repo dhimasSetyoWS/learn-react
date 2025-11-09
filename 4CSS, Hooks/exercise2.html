@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>React Basic</title>
+	<style>
+		input {
+			width: 250px;
+			padding: 12px;
+			margin-bottom: 8px;
+			border-radius: 8px;
+			border: solid 1px black;
+		}
+
+		.btn-container {
+			display: flex;
+			gap: 10px;
+		}
+
+		.btn-container button {
+			background-color: rgb(0, 123, 255);
+			border: none;
+			border-radius: 8px;
+			color: whitesmoke;
+			padding: 12px 24px;
+			cursor: pointer;
+		}
+
+		.showBtn {
+			margin-left: 12px;
+			background-color: rgb(255, 94, 0);
+			border: none;
+			border-radius: 8px;
+			color: whitesmoke;
+			padding: 12px 24px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="js-container"></div>
+	<script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+	<script src="https://unpkg.com/supersimpledev/react.js"></script>
+	<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+	<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+	<script type="text/babel">
+		function App() {
+			const [date, setDate] = React.useState(dayjs().format("HH:mm:ss"));
+			React.useEffect(() => {
+				setInterval(() => {
+					setDate(
+						dayjs().format("HH:mm:ss")
+					);
+					console.log("run code");
+				}, 1000);
+			},[]);
+			return (
+				<p>Current Time : {date}</p>
+			);
+		};
+		const container = document.getElementById("js-container");
+		ReactDOM.createRoot(container).render(<App />);
+	</script>
+</body>
+
+</html>

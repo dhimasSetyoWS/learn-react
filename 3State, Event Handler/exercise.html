@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>React Basic</title>
+</head>
+
+<body>
+	<div id="js-container"></div>
+	<script src="https://unpkg.com/supersimpledev/react.js"></script>
+	<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+	<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+	<script type="text/babel">
+		function ClickButton({counter, setCounter}) { // Buat props untuk ambil updater dan data dari state
+			// const [counter, setCounter] = React.useState(0); // Local State, jadi kalau ada 2 komponen, maka state nya akan berbeda juga
+			function increment() {
+				setCounter(counter + 1);
+				console.log("Clicked")
+			}
+			return (
+				<button onClick={increment}>Clicked {counter} {counter > 1 ? "times" : "time"}</button>
+			)
+		}
+
+		function App() {
+			const [counter, setCounter] = React.useState(0); // Global State
+			function reset() {
+				setCounter(0);
+				console.log("Reset counter")
+			}
+			return (
+				<>
+					<ClickButton
+						counter = {counter}
+						setCounter = {setCounter}
+					/>
+					<ClickButton
+						counter = {counter}
+						setCounter = {setCounter}
+					/>
+					<button onClick={reset}>Reset</button>
+				</>
+			)
+		}
+		const container = document.getElementById("js-container");
+		ReactDOM.createRoot(container).render(<App/>);
+	</script>
+</body>
+
+</html>

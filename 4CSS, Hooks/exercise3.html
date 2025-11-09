@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>React Basic</title>
+	<style>
+		html {
+			margin-top: 0px;
+			margin-bottom: 0px;
+		}
+		button {
+			background-color: rgb(25, 135, 84);
+			border: none;
+			color: whitesmoke;
+			padding: 12px 24px;
+			cursor: pointer;
+		}
+
+		.counter-container {
+			height: 100vh;
+			display : flex;
+			justify-content: center;
+			align-items: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="js-container"></div>
+	<script src="https://unpkg.com/supersimpledev/react.js"></script>
+	<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+	<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+	<script type="text/babel">
+		function App() {
+			const counterBtnRef = React.useRef(null);
+			const [counter, setCounter] = React.useState(0);
+			function increment() {
+				setCounter(counter + 1);
+				console.log("Clicked")
+			}
+			function reset() {
+				setCounter(0);
+				console.log("Reset counter")
+			}
+			function auto() {
+				const counterBtn = counterBtnRef.current;
+				setInterval(() => {
+					counterBtn.click();
+				}, 1000);
+			}
+			return (
+				<div className="counter-container">
+					<button ref={counterBtnRef} onClick={increment}>Clicked {counter} {counter > 1 ? "times" : "time"}</button>
+					<button onClick={reset}>Reset</button>
+					<button onClick={auto}>Auto Click</button>
+				</div>
+			)
+		}
+		const container = document.getElementById("js-container");
+		ReactDOM.createRoot(container).render(<App />);
+	</script>
+</body>
+
+</html>

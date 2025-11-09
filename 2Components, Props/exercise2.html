@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>React Basic</title>
+</head>
+
+<body>
+	<div id="js-container"></div>
+	<script src="https://unpkg.com/supersimpledev/react.js"></script>
+	<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+	<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+	<script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
+	<script type="text/babel">
+		function ProductDetails({name, price, discountPrice, imageSrc}) {
+			return(
+				<div>
+					<img src={imageSrc} width="100"/>
+					<p>{name}</p>
+					{!discountPrice ? (
+						<p>Price : ${price}</p>
+					) : <del><p>Price : ${price}</p></del>}
+					{discountPrice && (
+						<p>Discount Price : ${discountPrice}</p>
+					)}
+					<button>Add to cart</button>
+				</div>
+			)
+		}
+		function App() {
+			return (
+				<>
+					<ProductDetails
+						name = "Cotton Socks"
+						price = "10.90"
+						discountPrice = "5.45"
+						imageSrc = "https://supersimple.dev/images/cotton-socks.png"
+					/>
+					<ProductDetails
+						name = "Tennis Balls"
+						price = "6.00"
+						imageSrc = "https://supersimple.dev/images/tennis-balls.png"
+					/>
+					<ProductDetails
+						name = "Plain T-Shirt"
+						price = "7.99"
+						imageSrc = "https://supersimple.dev/images/plain-t-shirt.png"
+					/>
+				</>
+			)
+		}
+		const container = document.getElementById("js-container");
+		ReactDOM.createRoot(container).render(<App />);
+	</script>
+</body>
+
+</html>

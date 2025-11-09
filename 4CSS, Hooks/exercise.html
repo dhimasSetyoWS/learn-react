@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>React Basic</title>
+	<style>
+		.onBtn {
+			background-color: rgb(25 , 135 , 84);
+			border : none;
+			border-radius: 8px;
+			color : whitesmoke;
+			padding : 12px 24px;
+			cursor : pointer;
+		}
+		.offBtn {
+			background-color: rgb(220, 53, 69);
+			border : none;
+			border-radius: 8px;
+			color : whitesmoke;
+			padding : 12px 24px;
+			cursor : pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="js-container"></div>
+	<script src="https://unpkg.com/supersimpledev/react.js"></script>
+	<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+	<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+	<script type="text/babel">
+		function ButtonOn() {
+			const [isOn, setIsOn] = React.useState(false);
+			function toggleOn() {
+				setIsOn(!isOn);
+			}
+			return (
+				<button className={isOn ? "onBtn" : "offBtn"} onClick={toggleOn}>{isOn ? "ON" : "OFF"}</button>
+			)
+		}
+		function App() {
+			return (
+				<ButtonOn/>
+			)
+		}
+		const container = document.getElementById("js-container");
+		ReactDOM.createRoot(container).render(<App/>);
+	</script>
+</body>
+
+</html>
