@@ -1,0 +1,29 @@
+.input-container {
+  margin-top: auto;
+}
+.send-button {
+  background-color: rgb(25, 135, 84);
+  color: whitesmoke;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  margin: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.reset-button {
+  background-color: rgb(226, 226, 226);
+  color: gray;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  margin: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.prompt-field {
+  padding: 12px 8px;
+  border-radius: 12px;
+  border: solid 1px black;
+}

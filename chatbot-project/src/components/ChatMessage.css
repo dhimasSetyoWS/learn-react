@@ -1,0 +1,34 @@
+.Chat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.robot {
+  align-self: self-start;
+}
+
+.user {
+  align-self: flex-end;
+}
+
+.message-blob {
+  background-color: rgb(25, 135, 84);
+  border-radius: 8px;
+  padding: 12px;
+  color: whitesmoke;
+  font-weight: 400;
+  max-width: 200px;
+}
+
+.Chat img {
+  border-radius: 45px;
+}
+
+.time {
+  font-size: 12px;
+  margin: 0px;
+  text-align: left;
+  opacity: 0.4;
+}
