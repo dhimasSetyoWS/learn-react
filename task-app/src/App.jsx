@@ -21,10 +21,11 @@ function App() {
 		}
 	]);
   return (
-    <>
+    <div className='app'>
       <TaskInput tasks={tasks} setTasks={setTasks}/>
+	  <hr />
       <TaskList tasks={tasks}></TaskList>
-    </>
+    </div>
   )
 }
 

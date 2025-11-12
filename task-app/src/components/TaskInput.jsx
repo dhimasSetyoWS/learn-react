@@ -1,4 +1,5 @@
 import { useState } from "react"
+import "./TaskInput.css";
 export function TaskInput({tasks, setTasks}) {
 	const [task, setTask] = useState("");
 	const [subject, setSubject] = useState("Teori Kompleksitas");
@@ -32,8 +33,8 @@ export function TaskInput({tasks, setTasks}) {
 	};
 
 	return (
-		<div>
-			<input onChange={changeTask} value={task} placeholder="Insert your task here!" onKeyDown={keyHandler} required></input>
+		<div className="form-container">
+			<input className="input-field" onChange={changeTask} value={task} placeholder="Insert your task here!" onKeyDown={keyHandler} required></input>
 			<select id="car-select" onChange={changeSubject} value={subject}>
 				<option selected value="Teori Kompleksitas">Teori Kompleksitas</option>
 				<option value="Struktur Data">Struktur Data</option>
