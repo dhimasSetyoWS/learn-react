@@ -13,7 +13,6 @@ function App() {
   useEffect(() => {
     // get cart data
     axios.get("/api/cart-items?expand=product").then((response) => {
-      console.log(response.data);
       setCart(response.data);
     });
   }, []);
@@ -21,7 +20,7 @@ function App() {
     <Routes>
       <Route index element={<HomePage cart={cart}/>} />
       <Route path="/checkout" element={<CheckoutPage cart={cart}/>} />
-      <Route path="/orders" element={<OrdersPage />} />
+      <Route path="/orders" element={<OrdersPage cart={cart} />} />
       <Route path="/tracking" element={<TrackingPage />} />
     </Routes>
   );
