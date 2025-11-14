@@ -1,0 +1,13 @@
+.task-container {
+	max-width: 600px;
+  padding: 12px;
+  margin-right: 24px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: start;
+  overflow-y: hidden;
+}
+.app {
+	display: flex;
+}

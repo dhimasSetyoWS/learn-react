@@ -1,3 +1,4 @@
+import "./TaskList.css";
 import { Task } from "./Task"
 export function TaskList({tasks}) {
 	return (
