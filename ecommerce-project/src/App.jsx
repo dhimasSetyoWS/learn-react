@@ -12,9 +12,12 @@ function App() {
 
   useEffect(() => {
     // get cart data
-    axios.get("/api/cart-items?expand=product").then((response) => {
+    const getCartitems = async () => {
+      const response = await axios.get("/api/cart-items?expand=product");
       setCart(response.data);
-    });
+    }
+    
+    getCartitems();
   }, []);
   return (
     <Routes>

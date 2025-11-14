@@ -7,11 +7,14 @@ import { formatMoney } from "../../utils/money";
 
 export function OrdersPage({ cart }) {
   const [orders, setOrders] = useState([]);
+
   useEffect(() => {
-    axios.get("/api/orders?expand=products").then((response) => {
+    const getOrders = async () => {
+      const response = await axios.get("/api/orders?expand=products");
       setOrders(response.data);
-      console.log(response.data);
-    });
+    }
+
+    getOrders();
   }, []);
   return (
     <>
