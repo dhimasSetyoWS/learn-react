@@ -4,7 +4,7 @@ import "./CheckoutPage.css";
 import { CheckoutHeader } from "./CheckoutHeader";
 import { OrderSummary } from "./OrderSummary";
 import { PaymentSummary } from "./PaymentSummary";
-export function CheckoutPage({ cart }) {
+export function CheckoutPage({ cart, loadCart }) {
   const [paymentSummary, setPaymentSummary] = useState(null);
   const [deliveryOptions, setDeliveryOptions] = useState([]);
   useEffect(() => {
@@ -18,7 +18,7 @@ export function CheckoutPage({ cart }) {
     }
 
     getCheckoutData();
-  }, []);
+  }, [cart]); // pakai cart karena ketika kita update delivery option, maka dia akan load kembali cart nya yang mana akan mengupdate state cart yang ada di parent, sehingga jika state cart ke update, maka use effect ini akan di jalankan kembali
   return (
     <>
       <title>Checkout</title>
@@ -26,7 +26,7 @@ export function CheckoutPage({ cart }) {
       <div className="checkout-page">
         <div className="page-title">Review your order</div>
         <div className="checkout-grid">
-          <OrderSummary cart={cart} deliveryOptions={deliveryOptions} />
+          <OrderSummary cart={cart} deliveryOptions={deliveryOptions} loadCart={loadCart} />
           <PaymentSummary paymentSummary={paymentSummary}/>
         </div>
       </div>
